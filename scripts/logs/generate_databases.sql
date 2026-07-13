@@ -1,4 +1,4 @@
-USE ROLE PSEUDO_ACCOUNTADMIN;
+USE ROLE github_cicd_demo_role;
 
 -- ====================================================
 -- CREATE DATABASES & SCHEMAS
