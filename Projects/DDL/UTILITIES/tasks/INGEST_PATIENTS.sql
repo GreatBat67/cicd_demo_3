@@ -1,0 +1,9 @@
+create or replace task INGEST_PATIENTS
+	warehouse=DISHA_RANI_WH
+	schedule='USING CRON 00 13 * * * Asia/Kolkata'
+	as BEGIN
+    COPY INTO CICD_AUTOMATION{{env_suffix}}.PATIENTS.PATIENTS
+    FROM @CICD_AUTOMATION{{env_suffix}}.PATIENTS.PATIENTS_STAGE
+    FILE_FORMAT = 'CICD_AUTOMATION.UTILITIES.CSV'
+    ;
+END;

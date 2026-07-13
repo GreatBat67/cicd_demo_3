@@ -1,0 +1,68 @@
+manifest_version: 2
+type: DCM_PROJECT
+default_target: DCM_DEV
+targets:
+  DCM_DEV:
+    account_identifier: KIPI-KIPI_PRIMARY
+    project_name: CICD_AUTOMATION_DEV.UTILITIES.dcm_automation
+    project_owner: GITHUB_CICD_AUTOMATION_ROLE
+    templating_config: DEV
+  DCM_QA:
+    account_identifier: KIPI-KIPI_PRIMARY
+    project_name: CICD_AUTOMATION_QA.UTILITIES.dcm_automation
+    project_owner: GITHUB_CICD_AUTOMATION_ROLE
+    templating_config: QA
+  DCM_PROD:
+    account_identifier: KIPI-KIPI_PRIMARY
+    project_name: CICD_AUTOMATION_PROD.UTILITIES.dcm_automation
+    project_owner: GITHUB_CICD_AUTOMATION_ROLE
+    templating_config: PROD
+templating:
+  defaults:
+    project_owner_role: GITHUB_CICD_AUTOMATION_ROLE
+    warehouse: DISHA_RANI_WH
+    wh_size: XSMALL
+    dcm_schema: UTILITIES
+  configurations:
+    DEV:
+      environment: DEV
+      env_suffix: _DEV
+      database: CICD_AUTOMATION_DEV
+      schemas:
+      - PATIENTS
+      - PATIENTS_SILVER
+      - HOSPITALS
+      - UTILITIES
+      dcm_schema: UTILITIES
+      project_name: CICD_AUTOMATION_DEV.UTILITIES.dcm_automation
+      project_owner: GITHUB_CICD_AUTOMATION_ROLE
+      roles:
+      - GITHUB_CICD_AUTOMATION_ROLE
+    QA:
+      environment: QA
+      env_suffix: _QA
+      database: CICD_AUTOMATION_QA
+      schemas:
+      - PATIENTS
+      - PATIENTS_SILVER
+      - HOSPITALS
+      - UTILITIES
+      dcm_schema: UTILITIES
+      project_name: CICD_AUTOMATION_QA.UTILITIES.dcm_automation
+      project_owner: GITHUB_CICD_AUTOMATION_ROLE
+      roles:
+      - GITHUB_CICD_AUTOMATION_ROLE
+    PROD:
+      environment: PROD
+      env_suffix: _PROD
+      database: CICD_AUTOMATION_PROD
+      schemas:
+      - PATIENTS
+      - PATIENTS_SILVER
+      - HOSPITALS
+      - UTILITIES
+      dcm_schema: UTILITIES
+      project_name: CICD_AUTOMATION_PROD.UTILITIES.dcm_automation
+      project_owner: GITHUB_CICD_AUTOMATION_ROLE
+      roles:
+      - GITHUB_CICD_AUTOMATION_ROLE

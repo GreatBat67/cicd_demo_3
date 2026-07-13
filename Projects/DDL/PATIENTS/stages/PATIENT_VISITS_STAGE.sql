@@ -1,0 +1,3 @@
+CREATE OR REPLACE STAGE CICD_AUTOMATION{{env_suffix}}.PATIENTS.PATIENT_VISITS_STAGE
+DIRECTORY = ( ENABLE = TRUE )
+COMMENT = 'Internal stage for incoming patient visit files (CSV)'

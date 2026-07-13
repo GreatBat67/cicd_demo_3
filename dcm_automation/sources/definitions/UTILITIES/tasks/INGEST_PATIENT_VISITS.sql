@@ -1,0 +1,6 @@
+DEFINE TASK {{ database }}.UTILITIES.INGEST_PATIENT_VISITS
+	warehouse=DISHA_RANI_WH
+	schedule='USING CRON 00 13 * * * Asia/Kolkata'
+	as COPY INTO {{ database }}.PATIENTS.PATIENTS
+    FROM @{{ database }}.PATIENTS.PATIENTS_STAGE
+FILE_FORMAT = (FORMAT_NAME = '{{ database }}.UTILITIES.CSV');

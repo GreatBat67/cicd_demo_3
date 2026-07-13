@@ -1,0 +1,3 @@
+DEFINE STAGE CICD_AUTOMATION_DEV.PATIENTS.PATIENT_VISITS_STAGE
+DIRECTORY = ( ENABLE = TRUE )
+COMMENT = 'Internal stage for incoming patient visit files (CSV)'

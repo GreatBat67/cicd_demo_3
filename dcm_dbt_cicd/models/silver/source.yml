@@ -1,0 +1,87 @@
+version: 2
+
+sources:
+  - name: bronze
+    description: Bronze layer containing raw patient and patient visit data ingested into Snowflake.
+    database: "{{ target.database }}"
+    schema: PATIENTS
+
+
+    tables:
+
+      - name: patients
+        description: Raw patient master data containing  contact information.
+
+        columns:
+          - name: patient_id
+            description: Unique identifier assigned to each patient.
+            tests:
+              - not_null
+              - unique
+
+          - name: full_name
+            description: Full name of the patient.
+            tests:
+              - not_null
+
+          - name: date_of_birth
+            description: Patient's date of birth.
+
+          - name: gender
+            description: Gender of the patient.
+            tests:
+              - accepted_values:
+                  values:
+                    - Male
+                    - Female
+                    - Other
+
+          - name: phone_number
+            description: Contact phone number of the patient.
+
+          - name: city
+            description: City where the patient resides.
+            tests:
+              - not_null
+
+      - name: patient_visits
+        description: Raw transactional data containing patient visit records and consultation details.
+
+        columns:
+          - name: visit_id
+            description: Unique identifier for each patient visit.
+            tests:
+              - not_null
+              - unique
+
+          - name: patient_id
+            description: Identifier of the patient associated with the visit.
+            tests:
+              - not_null
+              - relationships:
+                  to: source('bronze', 'patients')
+                  field: patient_id
+
+          - name: visit_date
+            description: Date on which the patient visited the healthcare facility.
+            tests:
+              - not_null
+
+          - name: doctor_name
+            description: Name of the doctor who attended the patient.
+            tests:
+              - not_null
+
+          - name: visit_type
+            description: Type of visit such as Consultation, Follow-up, or Emergency.
+            tests:
+              - accepted_values:
+                  values:
+                    - Consultation
+                    - Follow-up
+                    - Emergency
+
+          - name: diagnosis
+            description: Diagnosis or medical condition identified during the visit.
+            tests:
+              - not_null
