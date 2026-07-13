@@ -21,8 +21,6 @@ permissions:
 jobs:
   execute-orchestrator:
     runs-on: ubuntu-latest
-        
-    # Resolves promotion tiering dynamically based on execution branch name
     environment: ${{ github.ref_name == 'main' && 'main' || github.ref_name }}
         
     steps:
@@ -56,4 +54,8 @@ jobs:
           SNOWFLAKE_SCHEMA: "${{ vars.SNOWFLAKE_SCHEMAS }}"
         run: |
           echo "🚀 Initializing Orchestrator Pipeline Run for Tier: [${{ github.ref_name }}]"
+          
+          # ✅ FIX: Request and export the official OIDC JWT token string from GitHub's provider endpoint
+          export SNOWFLAKE_TOKEN=$(curl -sSL -X GET "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=https://token.actions.githubusercontent.com" -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" | jq -r '.value')
+          
           python scripts/initialise_project.py --stop-on-error
