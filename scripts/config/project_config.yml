@@ -2,7 +2,7 @@ project:
   name: DCM_AUTOMATION
 
 snowflake:
-  admin_role: PSEUDO_ACCOUNTADMIN
+  admin_role: github_cicd_demo_role
   account_identifier: KIPI-KIPI_PRIMARY
   warehouse: DISHA_RANI_WH
   warehouse_size: XSMALL
