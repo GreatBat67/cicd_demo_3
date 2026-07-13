@@ -1,0 +1,60 @@
+project:
+  name: DCM_AUTOMATION
+
+snowflake:
+  admin_role: PSEUDO_ACCOUNTADMIN
+  account_identifier: KIPI-KIPI_PRIMARY
+  warehouse: DISHA_RANI_WH
+  warehouse_size: XSMALL
+  user: DISHA_RANI
+  threads: 4
+  client_session_keep_alive: false
+
+databases:
+  - name: CICD_AUTOMATION_DEV
+    environment: DEV
+
+  - name: CICD_AUTOMATION_QA
+    environment: QA
+
+  - name: CICD_AUTOMATION_PROD
+    environment: PROD
+
+schemas:
+  - PATIENTS
+  - HOSPITALS
+  - UTILITIES
+
+roles:
+  GITHUB_CICD_DEMO_ROLE:
+    create: true
+    read: true
+    ownership: true
+
+dcm_project:
+    schema: UTILITIES
+    owner_role: GITHUB_CICD_DEMO_ROLE
+
+
+dbt:
+  profile_name: dcm_dbt_cicd
+  default_target: DCM_DEV
+  target_prefix: DCM
+  
+  project:
+    name: dcm_dbt_cicd
+    schema: UTILITIES
+    owner_role: GITHUB_CICD_DEMO_ROLE
+
+  targets:
+    DEV:
+      role: GITHUB_CICD_DEMO_ROLE
+      schema: PATIENTS_SILVER
+
+    QA:
+      role: GITHUB_CICD_DEMO_ROLE
+      schema: PATIENTS_SILVER
+
+    PROD:
+      role: GITHUB_CICD_DEMO_ROLE
+      schema: PATIENTS_SILVER

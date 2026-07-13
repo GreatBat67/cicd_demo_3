@@ -1,0 +1,5 @@
+DEFINE TASK {{ database }}.UTILITIES.TEST_DCM_DBT_CICD
+	warehouse=DISHA_RANI_WH
+	after {{ database }}.UTILITIES.RUN_DCM_DBT_CICD
+	as EXECUTE DBT PROJECT {{ database }}.UTILITIES.DCM_DBT_CICD
+    ARGS = 'test';
