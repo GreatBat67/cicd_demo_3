@@ -7,6 +7,12 @@ snowflake:
   warehouse: DISHA_RANI_WH
   warehouse_size: XSMALL
   user: DISHA_RANI
+  users:
+    DEV: github_cicd_demo_dev_user
+    QA: github_cicd_demo_qa_user
+    PROD: github_cicd_demo_prod_user
+  threads: 4
+  client_session_keep_alive: false
   threads: 4
   client_session_keep_alive: false
 

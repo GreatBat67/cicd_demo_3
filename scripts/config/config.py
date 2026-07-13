@@ -107,7 +107,7 @@ ACCOUNT_IDENTIFIER = SNOWFLAKE.get("account_identifier")
 WAREHOUSE = SNOWFLAKE.get("warehouse")
 WAREHOUSE_SIZE = SNOWFLAKE.get("warehouse_size")
 
-USER = SNOWFLAKE.get("user")
+USER = SNOWFLAKE.get("users")
 THREADS = SNOWFLAKE.get("threads")
 client_session_keep_alive = SNOWFLAKE.get("client_session_keep_alive")
 

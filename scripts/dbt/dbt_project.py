@@ -40,6 +40,16 @@ DBT_PROJECT_OWNER_ROLE = DBT_PROJECT["owner_role"]
 
 DBT_TARGETS = DBT["targets"]
 
+SNOWFLAKE_USER = SNOWFLAKE["user"]
+
+DBT_PROJECT = DBT["project"]
+DBT_PROJECT_NAME = DBT_PROJECT["name"]
+DBT_PROJECT_SCHEMA = DBT_PROJECT["schema"]
+DBT_PROJECT_OWNER_ROLE = DBT_PROJECT["owner_role"]
+# DBT_VERSION = DBT_PROJECT["version"]
+
+DBT_TARGET_PREFIX = DBT["target_prefix"]
+
 
 
 
@@ -72,27 +82,31 @@ for db in DATABASES:
     role = target["role"]
 
     sql.extend(
-        [
-            "-- ----------------------------------------------------",
-            f"-- Environment : {environment}",
-            "-- ----------------------------------------------------",
-            f"USE ROLE {ADMIN_ROLE};",
-            f"USE DATABASE {database};",
-            f"USE SCHEMA {database}.{DBT_PROJECT_SCHEMA};",
-            "",
-            (
-                f"CREATE DBT PROJECT IF NOT EXISTS "
-                f"{database}.{DBT_PROJECT_SCHEMA}.{DBT_PROJECT_NAME}"
-            ),
-            f"COMMENT = 'DBT Project - {environment}';",
-            "",
-            f"GRANT OWNERSHIP ON DBT PROJECT "
-            f"{database}.{DBT_PROJECT_SCHEMA}.{DBT_PROJECT_NAME} "
-            f"TO ROLE {DBT_PROJECT_OWNER_ROLE}"
-             f" COPY CURRENT GRANTS ;",
-            "",
-        ]
-    )
+    [
+        "-- ----------------------------------------------------",
+        f"-- Environment : {environment}",
+        "-- ----------------------------------------------------",
+        f"USE ROLE {ADMIN_ROLE};",
+        f"USE DATABASE {database};",
+        f"USE SCHEMA {database}.{DBT_PROJECT_SCHEMA};",
+        "",
+        (
+            f"CREATE DBT PROJECT IF NOT EXISTS "
+            f"{database}.{DBT_PROJECT_SCHEMA}.{DBT_PROJECT_NAME}"
+        ),
+        (
+            f"FROM 'snow://workspace/USER${SNOWFLAKE_USER}.PUBLIC."
+            f"CI_CD_STANDARD_TIER_OFFERING_TEMPLATE/versions/live/"
+            f"{DBT_PROJECT_NAME}/'"
+        ),
+        # f"DBT_VERSION = '{DBT_VERSION}'",
+        f"DEFAULT_TARGET = '{DBT_TARGET_PREFIX}_{environment}'",
+        "EXTERNAL_ACCESS_INTEGRATIONS = ()",
+        f"COMMENT = 'DBT Project - {environment}';",
+        "",
+    ]
+)
+
 
 # ============================================================
 # WRITE FILE

@@ -107,7 +107,10 @@ sql.append("")
 
 for role in ROLES.keys():
     sql.append(f"CREATE ROLE IF NOT EXISTS {role};")
-    sql.append(f"GRANT ROLE {role} TO ROLE {ADMIN_ROLE};")
+
+    # Don't grant a role to itself
+    if role.strip().upper() != ADMIN_ROLE.strip().upper():
+        sql.append(f"GRANT ROLE {role} TO ROLE {ADMIN_ROLE};")
 
 sql.append("")
 

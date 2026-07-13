@@ -57,7 +57,7 @@ LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
 PHASE1_SQL_OUTPUT = LOGS_DIR / "generate_databases.sql"
 CREATE_DCM_PROJECTS_SQL = LOGS_DIR / "create_dcm_projects.sql"
-CREATE_DBT_PROJECTS_SQL = LOGS_DIR / "create_dbt_projects.sql"
+CREATE_DBT_PROJECTS_SQL = LOGS_DIR / "create_dbt_project.sql"
 
 print("=" * 60)
 print(f"Scripts Directory : {SCRIPT_DIR}")
@@ -167,6 +167,7 @@ EXECUTION_ORDER = [
         "post_sql": [
             PHASE1_SQL_OUTPUT,
             CREATE_DCM_PROJECTS_SQL,
+            CREATE_DBT_PROJECTS_SQL,
         ],
     },
     {
