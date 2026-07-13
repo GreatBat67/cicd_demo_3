@@ -8,7 +8,8 @@ sys.dont_write_bytecode = True
 # LOCATE SCRIPTS DIRECTORY
 # ============================================================
 
-current = Path.cwd().resolve()
+# ✅ FIXED: Evaluates relative to the file location instead of the execution terminal[cite: 1]
+current = Path(__file__).resolve().parent
 scripts_dir = None
 
 for directory in [current] + list(current.parents):
@@ -205,7 +206,6 @@ def run_pipeline(phases=None, stop_on_error=False):
             }
             
             if connection_config["account"]:
-                # Instantiating this sets the default active session for this thread environment
                 session = Session.builder.configs(connection_config).getOrCreate()
                 print("✔ Snowpark session successfully initialized via GitHub OIDC runner context")
         except Exception as err:
