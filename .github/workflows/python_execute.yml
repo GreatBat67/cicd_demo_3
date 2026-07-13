@@ -8,11 +8,12 @@ on:
       - cicd
       - main
     paths:
-      - "db_schema/**"
-      - "config/**"
-      - "dcm/**"
+      - "scripts/db_schema/**"
+      - "scripts/config/**"
+      - "scripts/dcm/**"
       - "scripts/**"
   workflow_dispatch:
+
 permissions:
   id-token: write
   contents: read
@@ -20,10 +21,10 @@ permissions:
 jobs:
   execute-orchestrator:
     runs-on: ubuntu-latest
-    
+        
     # Resolves promotion tiering dynamically based on execution branch name
     environment: ${{ github.ref_name == 'main' && 'main' || github.ref_name }}
-    
+        
     steps:
       - name: "Checkout Repository Codebase"
         uses: actions/checkout@v4
@@ -33,7 +34,8 @@ jobs:
         with:
           python-version: "3.11"
           cache: "pip"
-          cache-dependency-path: "./requirements.txt" 
+          cache-dependency-path: "./requirements.txt"
+
       - name: "Install Core Python Dependencies"
         run: |
           python -m pip install --upgrade pip
