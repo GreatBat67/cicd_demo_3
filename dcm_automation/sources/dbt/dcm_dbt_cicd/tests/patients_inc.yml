@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: patients_inc
+    description: Incremental silver model containing cleansed and standardized patient master data loaded from the bronze layer.
+
+    columns:
+      - name: patient_id
+        description: Unique identifier assigned to each patient.
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: source('bronze', 'patients')
+              field: patient_id
+
+      - name: full_name
+        description: Full name of the patient.
+        tests:
+          - not_null
+
+      - name: date_of_birth
+        description: Date of birth of the patient.
+        
+      - name: gender
+        description: Gender of the patient.
+        tests:
+          - accepted_values:
+              values: ['Male', 'Female', 'Other']
+
+      - name: phone_number
+        description: Contact phone number of the patient.
+
+      - name: city
+        description: City where the patient resides.
+        tests:
+          - not_null

@@ -1,0 +1,73 @@
+# Global Repository Metadata
+owner: "GreatBat67"
+repo_name: "cicd_demo"
+project_name: "Snowflake Polymorphic Test Pipeline"
+
+# Code Paths to Monitor for Changes
+paths:
+  - "dcm_automation/**"
+  - "dcm_dbt_cicd/**"
+
+# Global Snowflake Infrastructure Configuration
+sf_account: "KIPI-KIPI_PRIMARY"
+sf_role: "github_cicd_demo_role"
+sf_warehouse: "github_cicd_demo_wh"
+
+# The Progression Order of Branches (Lowest to Highest)
+branch_sequence:
+  - "dev"
+  - "qa"
+  - "cicd"
+  - "main"
+
+# Per-Branch Rulesets, Environments, and Database Target Specs
+branch_data:
+  dev:
+    require_pr: false
+    required_approvals: 0
+    approvers: []
+    has_snowflake: false
+    has_email_gate: false
+
+  qa:
+    require_pr: true
+    required_approvals: 1
+    approvers:
+      - "disharaniBR"
+      - "GreatBat67"
+    has_snowflake: true
+    sf_user: "github_cicd_demo_qa_user"
+    sf_db: "CICD_AUTOMATION_QA"
+    sf_schema: "UTILITIES"
+    dcm_target: "DCM_QA"
+    has_email_gate: false
+  
+  cicd:
+    require_pr: true
+    required_approvals: 1
+    approvers:
+      - "disharaniBR"
+      - "GreatBat67"
+    has_snowflake: true
+    sf_user: "github_cicd_demo_cicd_user"
+    sf_db: "CICD_AUTOMATION_PROD"
+    sf_schema: "UTILITIES"
+    dcm_target: "DCM_PROD"
+    has_email_gate: false
+
+  main:
+    require_pr: true
+    required_approvals: 1
+    approvers:
+      - "DisharaniBR"
+    has_snowflake: true
+    sf_user: "github_cicd_demo_prod_user"
+    sf_db: "CICD_AUTOMATION_PROD"
+    sf_schema: "UTILITIES"
+    dcm_target: "DCM_PROD"
+    has_email_gate: true
+
+# Business Release Gate Details (Only processed if a branch has has_email_gate: true)
+biz_email: "ronak.b.laddha@kipi.ai"
+imap_server: "imap.gmail.com"
+imap_user: "ronak.b.laddha@kipi.ai"

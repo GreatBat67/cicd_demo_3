@@ -1,0 +1,62 @@
+name: "Snowflake dbt Transformation Pipeline - DEV"
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - dev
+    paths:
+      - "dcm_dbt_cicd/.**"
+      - "dcm_dbt_cicd/**"
+  push:
+    branches:
+      - dev
+    paths:
+      - "dcm_dbt_cicd/.**"
+      - "dcm_dbt_cicd/**"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  dbt-orchestration:
+    if: (github.base_ref == 'dev' && github.event_name == 'pull_request') || (github.ref_name == 'dev' && github.event_name == 'push')
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Snowflake CLI (OIDC)
+        uses: snowflakedb/snowflake-cli-action@v2.0
+        with:
+          use-oidc: true
+      - name: Execute Parameterized Transformation Plan/Deploy Loop
+        env:
+          SNOWFLAKE_ACCOUNT: "${{ vars.SNOWFLAKE_ACCOUNT }}"
+          SNOWFLAKE_ROLE: "${{ vars.SNOWFLAKE_ROLE }}"
+          SNOWFLAKE_USER: "${{ vars.SNOWFLAKE_USER }}"
+          SNOWFLAKE_WAREHOUSE: "${{ vars.SNOWFLAKE_WAREHOUSE }}"
+          SNOWFLAKE_DATABASES: "${{ vars.SNOWFLAKE_DATABASES }}"
+          SNOWFLAKE_SCHEMAS: "${{ vars.SNOWFLAKE_SCHEMAS }}"
+        run: |
+          ACTION_MODE="PLAN"
+          if [ "${{ github.event_name }}" = "push" ]; then ACTION_MODE="DEPLOY"; fi
+          
+          IFS=',' read -r -a db_array <<< "$SNOWFLAKE_DATABASES"
+          IFS=',' read -r -a schema_array <<< "$SNOWFLAKE_SCHEMAS"
+          
+          for db in "${db_array[@]}"; do
+            for schema in "${schema_array[@]}"; do
+              export SNOWFLAKE_DATABASE="$db"
+              export SNOWFLAKE_SCHEMA="$schema"
+              
+              export SNOWFLAKE_QUERY_TAG="GH_RUNNER_DEV_DBT_${ACTION_MODE}_${db}_${schema}_RUN_${{ github.run_number }}"
+              echo "➔ Processing dbt Core Pipeline Target [${ACTION_MODE}] Matrix Context: DB=$db | SCHEMA=$schema | ALIAS=$SNOWFLAKE_QUERY_TAG"
+              
+              if [ "${{ github.event_name }}" = "pull_request" ]; then
+                snow dbt deploy "${{ vars.DBT_PROJECT_NAME_DEV }}" --source "${{ vars.DBT_PROJECT_DIR }}" --force -x
+              else
+                snow dbt deploy "${{ vars.DBT_PROJECT_NAME_PROD }}" --source "${{ vars.DBT_PROJECT_DIR }}" --force -x
+                snow dbt execute -x "${{ vars.DBT_PROJECT_NAME_PROD }}" run --target "${{ vars.DCM_TARGET }}"
+              fi
+            done
+          done

@@ -1,0 +1,5 @@
+create or replace task TEST_DCM_DBT_CICD
+	warehouse=DISHA_RANI_WH
+	after CICD_AUTOMATION{{env_suffix}}.UTILITIES.RUN_DCM_DBT_CICD
+	as EXECUTE DBT PROJECT CICD_AUTOMATION{{env_suffix}}.UTILITIES.DCM_DBT_CICD
+    ARGS = 'test';

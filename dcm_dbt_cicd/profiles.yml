@@ -1,0 +1,37 @@
+dcm_dbt_cicd:
+  target: DCM_DEV
+
+  outputs:
+
+    DCM_DEV:
+      type: snowflake
+      account: KIPI-KIPI_PRIMARY
+      user: DISHA_RANI
+      role: GITHUB_CICD_DEMO_ROLE
+      database: CICD_AUTOMATION_DEV
+      warehouse: DISHA_RANI_WH
+      schema: PATIENTS_SILVER
+      threads: 4
+      client_session_keep_alive: false
+
+    DCM_QA:
+      type: snowflake
+      account: KIPI-KIPI_PRIMARY
+      user: DISHA_RANI
+      role: GITHUB_CICD_DEMO_ROLE
+      database: CICD_AUTOMATION_QA
+      warehouse: DISHA_RANI_WH
+      schema: PATIENTS_SILVER
+      threads: 4
+      client_session_keep_alive: false
+
+    DCM_PROD:
+      type: snowflake
+      account: KIPI-KIPI_PRIMARY
+      user: DISHA_RANI
+      role: GITHUB_CICD_DEMO_ROLE
+      database: CICD_AUTOMATION_PROD
+      warehouse: DISHA_RANI_WH
+      schema: PATIENTS_SILVER
+      threads: 4
+      client_session_keep_alive: false
