@@ -193,9 +193,9 @@ for role, policy in ROLES.items():
     # ACCOUNT LEVEL GRANTS
     # --------------------------------------------------------
 
-    sql.append(f"GRANT EXECUTE TASK ON ACCOUNT TO ROLE {role};")
-    sql.append(f"GRANT CREATE ROLE ON ACCOUNT TO ROLE {role};")
-    sql.append(f"GRANT MANAGE GRANTS ON ACCOUNT TO ROLE {role};")
+    #sql.append(f"GRANT EXECUTE TASK ON ACCOUNT TO ROLE {role};")
+    #sql.append(f"GRANT CREATE ROLE ON ACCOUNT TO ROLE {role};")
+    #sql.append(f"GRANT MANAGE GRANTS ON ACCOUNT TO ROLE {role};")
     
     sql.append("")
     
