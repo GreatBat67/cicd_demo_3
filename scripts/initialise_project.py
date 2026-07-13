@@ -8,7 +8,7 @@ sys.dont_write_bytecode = True
 # LOCATE SCRIPTS DIRECTORY
 # ============================================================
 
-current = Path.cwd().resolve()
+current = Path(__file__).resolve().parent
 scripts_dir = None
 
 for directory in [current] + list(current.parents):
@@ -131,7 +131,6 @@ def run_python_script(script_path: Path):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
 
-    # Execute the script's main() function if it exists
     if hasattr(module, "main"):
         module.main()
 
@@ -182,30 +181,29 @@ def run_pipeline(phases=None, stop_on_error=False):
 
     session = None
 
-    # 1. Attempt internal native lookup first
     try:
         from snowflake.snowpark.context import get_active_session
         session = get_active_session()
         print("✔ Snowpark session active via internal context")
     except Exception:
-        # 2. External Runner Fallback Strategy using OIDC payload
         try:
             from snowflake.snowpark import Session
             import os
             
+            # ✅ FIX: Target the pure verified OIDC JWT identity token mapping explicitly[cite: 1]
             connection_config = {
                 "account": os.environ.get("SNOWFLAKE_ACCOUNT"),
                 "role": os.environ.get("SNOWFLAKE_ROLE"),
+                "user": os.environ.get("SNOWFLAKE_USER"),
                 "warehouse": os.environ.get("SNOWFLAKE_WAREHOUSE"),
                 "database": os.environ.get("SNOWFLAKE_DATABASE"),
                 "schema": os.environ.get("SNOWFLAKE_SCHEMA"),
                 "authenticator": "WORKLOAD_IDENTITY",
                 "workload_identity_provider": "OIDC",
-                "token": os.environ.get("ACTIONS_ID_TOKEN_REQUEST_TOKEN") or os.environ.get("SNOWFLAKE_TOKEN")
+                "token": os.environ.get("SNOWFLAKE_TOKEN")
             }
             
-            if connection_config["account"]:
-                # Instantiating this sets the default active session for this thread environment
+            if connection_config["account"] and connection_config["token"]:
                 session = Session.builder.configs(connection_config).getOrCreate()
                 print("✔ Snowpark session successfully initialized via GitHub OIDC runner context")
         except Exception as err:
@@ -220,9 +218,6 @@ def run_pipeline(phases=None, stop_on_error=False):
         print(phase["phase"])
         print("=" * 60)
 
-        # ----------------------------------------------------
-        # PYTHON SCRIPTS
-        # ----------------------------------------------------
         for script in phase["scripts"]:
             total += 1
 
@@ -245,9 +240,6 @@ def run_pipeline(phases=None, stop_on_error=False):
                 if stop_on_error:
                     return False
 
-        # ----------------------------------------------------
-        # SQL FILES
-        # ----------------------------------------------------
         for sql_file in phase.get("post_sql", []):
             print(f"Executing SQL : {sql_file.name}")
 
@@ -275,10 +267,6 @@ def run_pipeline(phases=None, stop_on_error=False):
 
     return failed == 0
 
-
-# ============================================================
-# MAIN
-# ============================================================
 
 if __name__ == "__main__":
 
