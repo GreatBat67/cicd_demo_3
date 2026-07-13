@@ -10,6 +10,7 @@ snowflake:
   users:
     DEV: github_cicd_demo_dev_user
     QA: github_cicd_demo_qa_user
+    CICD: github_cicd_demo_cicd_user
     PROD: github_cicd_demo_prod_user
   threads: 4
   client_session_keep_alive: false
@@ -22,6 +23,9 @@ databases:
 
   - name: CICD_AUTOMATION_QA
     environment: QA
+
+  - name: CICD_AUTOMATION_CICD
+    environment: CICD
 
   - name: CICD_AUTOMATION_PROD
     environment: PROD
