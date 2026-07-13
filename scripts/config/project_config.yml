@@ -18,16 +18,16 @@ snowflake:
   client_session_keep_alive: false
 
 databases:
-  - name: CICD_AUTOMATION_DEV
+  - name: CICD_DEMO_DEV
     environment: DEV
 
-  - name: CICD_AUTOMATION_QA
+  - name: CICD_DEMO_QA
     environment: QA
 
-  - name: CICD_AUTOMATION_CICD
+  - name: CICD_DEMO_CICD
     environment: CICD
 
-  - name: CICD_AUTOMATION_PROD
+  - name: CICD_DEMO_PROD
     environment: PROD
 
 schemas:
