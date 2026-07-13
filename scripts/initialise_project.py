@@ -190,7 +190,7 @@ def run_pipeline(phases=None, stop_on_error=False):
             from snowflake.snowpark import Session
             import os
             
-            # ✅ FIX: Target the pure verified OIDC JWT identity token mapping explicitly[cite: 1]
+            # Formulates connection metadata using secretless OIDC configuration
             connection_config = {
                 "account": os.environ.get("SNOWFLAKE_ACCOUNT"),
                 "role": os.environ.get("SNOWFLAKE_ROLE"),
